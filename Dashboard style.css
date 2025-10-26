@@ -1,0 +1,113 @@
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 220px;
+    height: 100%;
+    background-color: #0077b6;
+    color: white;
+    padding: 20px;
+}
+
+.sidebar .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar nav ul li {
+    margin-bottom: 20px;
+}
+
+.sidebar nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 240px; /* space for sidebar */
+    padding: 20px 40px;
+}
+
+/* Top Bar */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.topbar h1 {
+    font-size: 28px;
+}
+
+.user-info {
+    font-weight: 500;
+}
+
+/* Cards */
+.cards-container {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.cards-container .card {
+    flex: 1;
+    min-width: 200px;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s;
+}
+
+.cards-container .card:hover {
+    transform: scale(1.05);
+}
+
+.card-blue { background-color: #0077b6; }
+.card-green { background-color: #00b4d8; }
+.card-orange { background-color: #f8961e; }
+.card-purple { background-color: #7209b7; }
+
+/* Booking Table */
+.bookings table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.bookings th, .bookings td {
+    border: 1px solid #0077b6;
+    padding: 10px;
+    text-align: center;
+}
+
+.bookings th {
+    background-color: #0077b6;
+    color: white;
+}
+
+/* Search Box */
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    padding: 10px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 5px;
+    border: 1px solid #0077b6;
+}

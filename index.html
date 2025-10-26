@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Travelly</title>
+
+  <!-- ✅ Link to PWA Manifest -->
+  <link rel="manifest" href="manifest.json" />
+
+  <!-- ✅ Theme color for address bar -->
+  <meta name="theme-color" content="#0078d7" />
+
+  <!-- ✅ Favicon -->
+  <link rel="icon" href="icons/icon-192x192.png" type="image/png" />
+
+  <!-- ✅ External CSS -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- ✅ Navigation -->
+  <header class="navbar">
+    <div class="logo">Travelly</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Destinations</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ✅ Hero Section -->
+  <section class="hero">
+    <h1>Explore the World with Travelly</h1>
+    <p>Your adventure starts here. Discover amazing destinations today!</p>
+    <button id="getStartedBtn">Get Started</button>
+  </section>
+
+  <!-- ✅ Destination Cards -->
+  <section class="destinations">
+    <h2>Popular Destinations</h2>
+    <div class="cards">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600" alt="Paris" />
+        <h3>Paris</h3>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600" alt="New York" />
+        <h3>New York</h3>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ Install Button -->
+  <button
+    id="installBtn"
+    hidden
+    class="install-btn"
+    style="
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #0078d7;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    "
+  >
+    Install Travelly
+  </button>
+
+  <!-- ✅ Main App Script -->
+  <script>
+    // "Get Started" button navigation
+    document.getElementById('getStartedBtn').addEventListener('click', () => {
+      window.location.href = 'dashboard.html'; // optional page
+    });
+
+    // ✅ Register Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          await navigator.serviceWorker.register('/service-worker.js');
+          console.log('✅ Service Worker registered successfully.');
+        } catch (error) {
+          console.log('❌ Service Worker registration failed:', error);
+        }
+      });
+    }
+
+    // ✅ Install Button Logic
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.hidden = false; // show button
+      console.log('✅ beforeinstallprompt fired');
+    });
+
+    installBtn.addEventListener('click', async () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        console.log(`User response: ${outcome}`);
+        deferredPrompt = null;
+        installBtn.hidden = true;
+      } else {
+        // Fallback: manual instructions if prompt not available
+        alert('If the Install prompt doesn’t appear, click the Chrome menu (⋮) → “Install app”.');
+      }
+    });
+
+    // ✅ Detect successful installation
+    window.addEventListener('appinstalled', () => {
+      console.log('🎉 Travelly installed successfully!');
+      installBtn.hidden = true;
+      alert('🎉 Travelly installed successfully!');
+    });
+
+    // ✅ Force-show button for testing (if prompt hasn’t fired)
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        if (!deferredPrompt) {
+          installBtn.hidden = false;
+          console.log('⚙️ Force-showing Install button for testing.');
+        }
+      }, 2000);
+    });
+  </script>
+</body>
+</html>

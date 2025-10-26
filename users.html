@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travelly Users</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif;}
+body{display:flex;min-height:100vh;background:#f4f4f4;transition:all 0.3s;}
+.sidebar{width:250px;background:#3498db;color:white;flex-shrink:0;display:flex;flex-direction:column;padding:20px;transition:all 0.3s;}
+.sidebar.collapsed{width:70px;}
+.sidebar h2{margin-bottom:30px;text-align:center;font-size:20px;}
+.sidebar a{color:white;text-decoration:none;padding:12px;display:flex;align-items:center;border-radius:5px;margin-bottom:10px;transition:0.2s;white-space:nowrap;overflow:hidden;}
+.sidebar a:hover, .sidebar a.active{background:#2980b9;}
+.sidebar a .label{margin-left:10px;}
+.sidebar.collapsed a .label{display:none;}
+.toggle-btn{position:absolute;top:15px;left:260px;font-size:24px;cursor:pointer;color:#3498db;transition:all 0.3s;}
+.main{flex:1;padding:30px;transition:all 0.3s;}
+.main h1{margin-bottom:30px;color:#333;}
+form{background:white;padding:20px;border-radius:10px;margin-bottom:40px;box-shadow:0 5px 15px rgba(0,0,0,0.1);}
+form label{display:block;margin-bottom:5px;font-weight:bold;}
+form input,form select{width:100%;padding:10px;margin-bottom:15px;border-radius:5px;border:1px solid #ccc;}
+form button{padding:10px 20px;background:#3498db;color:white;border:none;border-radius:5px;cursor:pointer;}
+table{width:100%;border-collapse:collapse;background:white;border-radius:10px;overflow:hidden;}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #ddd;}
+th{background:#3498db;color:white;}
+tr:hover{background:#f1f1f1;}
+.delete-btn{padding:4px 10px;border:none;border-radius:5px;background:#e74c3c;color:white;cursor:pointer;}
+@media screen and (max-width:768px){body{flex-direction:column;} .sidebar{width:100%;flex-direction:row;overflow-x:auto;} .sidebar a{margin-right:10px;margin-bottom:0;}}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar" id="sidebar">
+<h2>Travelly</h2>
+<a href="dashboard.html"><span class="icon">&#128200;</span><span class="label">Dashboard</span></a>
+<a href="booking.html"><span class="icon">&#128197;</span><span class="label">Bookings</span></a>
+<a href="#"><span class="icon">&#127758;</span><span class="label">Destinations</span></a>
+<a href="users.html" class="active"><span class="icon">&#128101;</span><span class="label">Users</span></a>
+<a href="#"><span class="icon">&#128202;</span><span class="label">Reports</span></a>
+<a href="#"><span class="icon">&#9881;</span><span class="label">Settings</span></a>
+</div>
+
+<div class="toggle-btn" id="toggleBtn">&#9776;</div>
+
+<div class="main">
+<h1>Users</h1>
+
+<!-- User Form -->
+<form id="userForm">
+<label>Name</label>
+<input type="text" id="name" placeholder="Enter user name" required>
+
+<label>Email</label>
+<input type="email" id="email" placeholder="Enter email" required>
+
+<label>Role</label>
+<select id="role" required>
+<option value="">Select role</option>
+<option value="Admin">Admin</option>
+<option value="User">User</option>
+</select>
+
+<button type="submit">Add User</button>
+</form>
+
+<!-- Users Table -->
+<table id="usersTable">
+<thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+<tbody></tbody>
+</table>
+
+<script>
+// Sidebar toggle
+const toggleBtn = document.getElementById('toggleBtn');
+const sidebar = document.getElementById('sidebar');
+toggleBtn.addEventListener('click', ()=>{sidebar.classList.toggle('collapsed');});
+
+// Load users from localStorage
+let users = JSON.parse(localStorage.getItem('users')) || [];
+const usersTable = document.getElementById('usersTable').getElementsByTagName('tbody')[0];
+
+function renderUsers(){
+    usersTable.innerHTML = '';
+    users.forEach((user,index)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${user.name}</td>
+            <td>${user.email}</td>
+            <td>${user.role}</td>
+            <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+        `;
+        usersTable.appendChild(tr);
+    });
+
+    // Add delete event listeners
+    document.querySelectorAll('.delete-btn').forEach(btn=>{
+        btn.addEventListener('click', e=>{
+            const idx = e.target.getAttribute('data-index');
+            users.splice(idx,1);
+            localStorage.setItem('users',JSON.stringify(users));
+            renderUsers();
+        });
+    });
+}
+
+renderUsers();
+
+// Handle form submission
+const userForm = document.getElementById('userForm');
+userForm.addEventListener('submit', e=>{
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const role = document.getElementById('role').value;
+
+    users.push({name,email,role});
+    localStorage.setItem('users',JSON.stringify(users));
+    renderUsers();
+    userForm.reset();
+});
+</script>
+
+</body>
+</html>
