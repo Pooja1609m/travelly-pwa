@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Travelly Voice Demo</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    height: 100vh; 
+    background: linear-gradient(135deg, #74b9ff, #0984e3); 
+    color: white;
+    text-align: center;
+}
+button {
+    padding: 15px 25px; 
+    margin: 10px; 
+    font-size: 18px; 
+    border: none; 
+    border-radius: 10px; 
+    cursor: pointer;
+    background: #fff; 
+    color: #0984e3; 
+    font-weight: bold;
+}
+#voiceOutput {
+    margin-top: 20px;
+    font-size: 20px;
+}
+</style>
+</head>
+<body>
+
+<h1>🎤 Travelly Voice Demo</h1>
+
+<button id="voiceBtn">Speak a Command</button>
+<button id="speakBtn">Hear a Message</button>
+
+<p id="voiceOutput">Say something like: "Go to Paris"</p>
+
+<script>
+// ------------------- Voice Input -------------------
+const voiceBtn = document.getElementById('voiceBtn');
+const voiceOutput = document.getElementById('voiceOutput');
+
+if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'en-US';
+
+    voiceBtn.addEventListener('click', () => {
+        recognition.start();
+        voiceOutput.textContent = "Listening...";
+    });
+
+    recognition.onresult = (event) => {
+        const speech = event.results[0][0].transcript;
+        voiceOutput.textContent = `You said: "${speech}"`;
+
+        // Example commands
+        if (speech.toLowerCase().includes('paris')) {
+            alert("Navigating to Paris page...");
+            // window.location.href = 'paris.html';
+        } else if (speech.toLowerCase().includes('new york')) {
+            alert("Navigating to New York page...");
+            // window.location.href = 'newyork.html';
+        } else {
+            alert("Command not recognized!");
+        }
+    };
+
+    recognition.onerror = () => {
+        voiceOutput.textContent = "Error recognizing speech. Try again.";
+    };
+} else {
+    voiceOutput.textContent = "Speech recognition not supported in this browser.";
+}
+
+// ------------------- Voice Output -------------------
+const speakBtn = document.getElementById('speakBtn');
+speakBtn.addEventListener('click', () => {
+    const msg = new SpeechSynthesisUtterance("Welcome to Travelly! Plan your next adventure.");
+    msg.lang = 'en-US';
+    speechSynthesis.speak(msg);
+});
+</script>
+</body>
+</html>
